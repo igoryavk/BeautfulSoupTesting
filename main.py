@@ -61,9 +61,15 @@ def saving_pous_into_text():
          #print(type(pou))
          interface=pou.interface
          name=pou.get("name")
-         with open(f"C://json//interfaces//{name}",encoding="utf-8",mode="w+") as out:
-             out.write(interface)
-             out.close()
+         with open(f"C://json//interfaces//{name}",encoding="utf-8",mode="a") as out:
+             sections=[section for section in interface.children if section.name is not None]
+             for section in sections:
+                 print(section.name)
+                 vars=[var for var in section.children if var.name is not None]
+                 for var in vars:
+                     print(var)
+             #    out.write(str(var))
+             # out.close()
 
 if __name__ == '__main__':
     #parsing_project()
