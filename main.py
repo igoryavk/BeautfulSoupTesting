@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
 from colorama import Fore
-
+from os import makedirs
+from os.path import exists
+from os import rmdir
+from shutil import rmtree
+import bs4
 
 def parsing_project():
     with open("C://Python//Objects//Device.xml",encoding="utf-8",mode="r") as openxml:
@@ -71,9 +75,55 @@ def saving_pous_into_text():
              #    out.write(str(var))
              # out.close()
 
+def parsing_interface():
+    with open("C://json//myexport.xml",encoding="utf-8",mode="r") as plsxml:
+        content=plsxml.read()
+    bs=BeautifulSoup(content,"lxml")
+    pous=[pou for pou in bs.types.pous if pou.name is not None]
+    path="D://POUs/interfaces//"
+    if (exists(path)):
+        rmtree(path)
+    makedirs(f"{path}")
+    for pou in pous:
+        dir_name=pou.get("name")
+        makedirs(f"{path}{dir_name}")
+
+        interface=pou.interface
+        sections=[section for section in interface.children if section.name is not None]
+        for section in sections:
+            #print(section)
+            if (not exists(f"{path}{dir_name}//{section.name}")):
+                makedirs(f"{path}{dir_name}//{section.name}")
+
+            if type(section.variable)==bs4.element.Tag:
+                 var=section.variable
+
+                 filename=f"{path}{dir_name}//{section.name}//{var.get('name')}.txt"
+                 with open(filename,encoding="utf-8",mode="a") as file:
+                    file.write(str(var))
+                    file.close()
+def parsing_st():
+    with open("C://json//myexport.xml",encoding="utf-8",mode="r") as plcxml:
+        content=plcxml.read()
+    bs=BeautifulSoup(content,"lxml")
+    pous=[pou for pou in bs.types.pous if pou.name is not None]
+    path = "D://POUs/st//"
+    if exists(path):
+        rmtree(path)
+    makedirs(f"{path}")
+    for pou in pous:
+        with open(f"{path}{pou.get('name')}.txt",encoding="utf-8",mode="a") as file:
+            file.write(str(pou.st))
+            file.close()
+
+
+
+
 if __name__ == '__main__':
     #parsing_project()
     #parsing_types()
     #parsing_datatype()
     #parsing_pous()
-    saving_pous_into_text()
+    #saving_pous_into_text()
+    parsing_interface()
+    parsing_st()
