@@ -116,8 +116,18 @@ def parsing_st():
             file.write(str(pou.st))
             file.close()
 
+def delete_element_from_tree():
+    with open("C://json//myexport.xml",encoding="utf-8",mode="r") as xml:
+        content=xml.read()
+    bs=BeautifulSoup(content,"lxml")
+    out=bs
+    for element in  bs.find_all("pou"):
+        element.decompose()
 
-
+    with open("C://json//withoutpou.xml",encoding="utf-8",mode="w") as file:
+        file.write(str(out))
+        file.close()
+def
 
 if __name__ == '__main__':
     #parsing_project()
@@ -125,5 +135,6 @@ if __name__ == '__main__':
     #parsing_datatype()
     #parsing_pous()
     #saving_pous_into_text()
-    parsing_interface()
-    parsing_st()
+    #parsing_interface()
+    #parsing_st()
+    delete_element_from_tree()
